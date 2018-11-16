@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +23,9 @@ import com.prs.business.product.ProductRepository;
 import com.prs.util.JsonResponse;
 
 
-
+@CrossOrigin
 @Controller
-@RequestMapping("/Product")
+@RequestMapping(path="/Products")
 public class ProductController {
 
 	@Autowired
@@ -39,7 +40,7 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping("/Get")
+	@GetMapping("/Get/{id}")
 	public @ResponseBody JsonResponse getProduct(@PathVariable int id) {
 		try {
 			Optional<Product> product = productRepository.findById(id);

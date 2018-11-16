@@ -1,3 +1,4 @@
+
 package com.prs.web;
 
 
@@ -7,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.prs.business.user.User;
 import com.prs.business.user.UserRepository;
 import com.prs.util.JsonResponse;
-
+@CrossOrigin
 @Controller
-@RequestMapping("/Users")
+@RequestMapping(path="/Users")
 public class UserController {
 
 	@Autowired
@@ -35,7 +37,7 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/Get")
+	@GetMapping("/Get/{id}")
 	public @ResponseBody JsonResponse getUser(@PathVariable int id) {
 		try {
 			Optional<User> user = userRepository.findById(id);
@@ -47,17 +49,16 @@ public class UserController {
 			return JsonResponse.getErrorInstance("Error getting user:  " + e.getMessage(), null);
 		}
 	}
-//  WORK IN PROGRESS!!
-//	@PostMapping("/Login")
-//	public @ResponseBody JsonResponse authenticate(@RequestBody User user) {
-//		try {
-//			User u = userRepository.finbyUsernameAndPassword(String user.getUserName(),
-//														    (String user.getUserName());
-//			return JsonResponse.getInstance(u);		
-//		}
-//		catch(Exception e) {
-//			return JsonResponse.getErrorInstance("Error authenticating user:  " +e.getMessage(), null)
-//		}
+     //Buis Requirements- Auth User
+	@GetMapping("/Login/{username}/{password}")
+	public @ResponseBody JsonResponse authenticate(@PathVariable String username, @PathVariable String password) {
+		try {
+			User u = userRepository.findByUserNameAndPassword(username, password);
+			return JsonResponse.getInstance(u);		
+		} catch(Exception e) {
+			return JsonResponse.getErrorInstance("Error authenticating user:  " +e.getMessage(), null);
+		}
+	}
 
 	@PostMapping("/Add")
 	public @ResponseBody JsonResponse addUser(@RequestBody User user) {

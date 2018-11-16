@@ -1,10 +1,13 @@
 package com.prs.web;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,19 +16,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
+import com.prs.business.product.Product;
+import com.prs.business.purchaserequest.PurchaseRequest;
 import com.prs.business.purchaserequest.PurchaseRequestLineItem;
 import com.prs.business.purchaserequest.PurchaseRequestLineItemRepository;
+import com.prs.business.purchaserequest.PurchaseRequestRepository;
 import com.prs.util.JsonResponse;
-
+@CrossOrigin
 @Controller
-@RequestMapping("/PurchaseRequestLineItem")
+@RequestMapping(path="/PurchaseRequestLineItems")
 
 public class PurchaseRequestLineItemController {
 
 	@Autowired
 	private PurchaseRequestLineItemRepository purchaseRequestLineItemRepository;
-
+//	@Autowired
+//	private PurchaseRequestRepository purchaseRequestRepository;
+	
 	@GetMapping("/List")
 	public @ResponseBody JsonResponse getAllPurchaseRequestLineItem() {
 		try {
@@ -35,7 +42,7 @@ public class PurchaseRequestLineItemController {
 		}
 	}
 
-	@GetMapping("/Get")
+	@GetMapping("/Get/{id}")
 	public @ResponseBody JsonResponse getPurchaseRequestLineItem(@PathVariable int id) {
 		try {
 			Optional<PurchaseRequestLineItem> purchaseRequestLineItem = purchaseRequestLineItemRepository.findById(id);
@@ -51,12 +58,22 @@ public class PurchaseRequestLineItemController {
 
 	@PostMapping("/Add")
 	public @ResponseBody JsonResponse addPurchaseRequestLineItem(@RequestBody PurchaseRequestLineItem purchaseRequestLineItem) {
+//		try {
+//			updateRequestTotal(purchaseRequestLineItem);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return savePurchaseRequestLineItem(purchaseRequestLineItem);
 	}
 
 
 	@PostMapping("/Change")
 	public @ResponseBody JsonResponse updatePurchaseRequestLineItem(@RequestBody PurchaseRequestLineItem purchaseRequestLineItem) {
+//		try {
+//			updateRequestTotal(purchaseRequestLineItem);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return savePurchaseRequestLineItem(purchaseRequestLineItem);
 	}
 
@@ -80,8 +97,25 @@ public class PurchaseRequestLineItemController {
 			return JsonResponse.getErrorInstance(ex.getMessage(), ex);
 		}
 	}
-
 }
+//WORK IN PROGRESS!!!
+//	private void updateRequestTotal(PurchaseRequestLineItem purchaseRequestLineItem) throws Exception {
+//		Optional<PurchaseRequest> purReq = purchaseRequestRepository.findById(purchaseRequestLineItem.getPurchaseRequest().getId());
+//		
+//		PurchaseRequest purchaseRequest = purReq.get();
+//		List<PurchaseRequestLineItem> lines = new ArrayList<>();
+//		lines = purchaseRequestLineItemRepository.findAllByPurchaseRequestId(purchaseRequest.getId());
+//		double total = 0;
+//		for (PurchaseRequestLineItem line: lines) {
+//			Product p = line.getProduct();
+//			double lineTotal = line.getQuantity()*p.getPrice();
+//			total += lineTotal;
+//		}
+//		purchaseRequest.setTotal(total);
+//		purchaseRequestRepository.save(purchaseRequest);
+//	}
+//}
+
 
 
 

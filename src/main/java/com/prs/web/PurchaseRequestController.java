@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.prs.business.purchaserequest.PurchaseRequest;
-import com.prs.business.purchaserequest.PurchaseRequestLineItem;
+
 import com.prs.business.purchaserequest.PurchaseRequestRepository;
-import com.prs.business.user.User;
-import com.prs.business.vendor.Vendor;
-import com.prs.business.vendor.VendorRepository;
+
 import com.prs.util.JsonResponse;
 
+
+@CrossOrigin
 @Controller
-@RequestMapping("/PurchaseRequest")
+@RequestMapping(path="/PurchaseRequests")
 
 public class PurchaseRequestController {
 
@@ -37,8 +38,17 @@ public class PurchaseRequestController {
 			return JsonResponse.getErrorInstance("Purchase Request list failure:" + e.getMessage(), e);
 		}
 	}
-
-	@GetMapping("/Get")
+	
+//	@GetMapping("/ListReview")
+//	public @ResponseBody JsonResponse getAllPurchaseRequestsForReview(@RequestParam int id) {
+//		try {
+//			return JsonResponse.getInstance(purchaseRequestRepository.findAllByUserIdNotAndStatus(id, "Review"));
+//		} catch (Exception e) {
+//			return JsonResponse.getErrorInstance("Purchase Request list failure:" + e.getMessage(), e);
+//		}
+//	}
+	
+	@GetMapping("/Get/{id}")
 	public @ResponseBody JsonResponse getPurchaseRequest(@PathVariable int id) {
 		try {
 			Optional<PurchaseRequest> purchaseRequest = purchaseRequestRepository.findById(id);
@@ -79,10 +89,10 @@ public class PurchaseRequestController {
 		} catch (Exception ex) {
 			return JsonResponse.getErrorInstance(ex.getMessage(), ex);
 		}
-	
+	}
 	}
 
-	//WORK IN PROGRESS
+//	//WORK IN PROGRESS
 //	@PostMapping("/SubmitForReview")
 //	public @ResponseBody String submitForReviewPurchaseRequest(@RequestBody PurchaseRequest purchaseRequest) {
 //		purchaseRequestRepository.submitForReview(purchaseRequest);
@@ -94,5 +104,10 @@ public class PurchaseRequestController {
 //		purchaseRequestRepository.submitForReview(purchaseRequest);
 //		return "purchaseRequest ApprovePR";
 //	}
-//
-}
+//	
+//	@PostMapping(path="/RejectPR") 
+//	public @ResponseBody JsonResponse rejectPR (@RequestBody PurchaseRequest purchaseRequest) {
+//		pr.setStatus(PurchaseRequest.STATUS_REJECTED);
+//		return savePurchaseRequest(purchaseRequest);
+//	}
+//}

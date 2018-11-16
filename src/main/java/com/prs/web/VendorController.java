@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.prs.business.vendor.Vendor;
 import com.prs.business.vendor.VendorRepository;
 import com.prs.util.JsonResponse;
-
+@CrossOrigin
 @Controller
-@RequestMapping("/Vendor")
+@RequestMapping(path="/Vendors")
 
 public class VendorController {
 	@Autowired
@@ -34,7 +35,7 @@ public class VendorController {
 			return JsonResponse.getErrorInstance("Vendor list failure:" + e.getMessage(), e);
 		}
 	}
-	@GetMapping("/Get")
+	@GetMapping("/Get/{id}")
 	public @ResponseBody JsonResponse getVendor(@PathVariable int id) {
 		try {
 			Optional<Vendor> vendor = vendorRepository.findById(id);
